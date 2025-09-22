@@ -16,7 +16,7 @@
   /// </remarks>
   public class CommandHandler
   {
-    private static Dictionary<string, Action<string[]>> commandList = new Dictionary<string, Action<string[]>>();
+    private static Dictionary<string, Action<string, string[]>> commandList = new Dictionary<string, Action<string, string[]>>();
 
     /// <summary>
     /// Registers a new command with the <see cref="CommandHandler"/>.
@@ -32,7 +32,7 @@
     /// <exception cref="InvalidOperationException">
     /// Thrown if a command with the same name has already been registered.
     /// </exception>
-    public void Register(string name, Action<string[]> action)
+    public void Register(string name, Action<string, string[]> action)
     {
       name = name.ToLower();
       if (!commandList.ContainsKey(name))
@@ -59,9 +59,10 @@
     /// </exception>
     public void Register(Command command)
     {
-      if (!commandList.ContainsKey(command.Name))
+      string name = command.Name.ToLower();
+      if (!commandList.ContainsKey(name))
       {
-        commandList.Add(command.Name, command.Execute);
+        commandList.Add(name, command.Execute);
       }
       else
       {
@@ -103,9 +104,9 @@
 /// </exception>
     public void Execute(string name, string[] args)
     {
-      if (commandList.TryGetValue(name, out Action<string[]>? action))
+      if (commandList.TryGetValue(name, out Action<string, string[]>? action))
       {
-        action.Invoke(args);
+        action.Invoke(name, args);
       }
       else
       {

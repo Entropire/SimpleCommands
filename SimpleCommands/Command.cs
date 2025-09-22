@@ -44,6 +44,6 @@ namespace SimpleCommands
     /// <param name="args">
     /// The arguments passed to the command during execution.
     /// </param>
-    public abstract void Execute(string[] args);
+    public abstract void Execute(string CommandName, string[] args);
   }
 }
