@@ -17,6 +17,7 @@
   public class CommandHandler
   {
     private static Dictionary<string, Action<string, string[]>> commandList = new Dictionary<string, Action<string, string[]>>();
+    private string commandPrefix = "/";
 
     /// <summary>
     /// Registers a new command with the <see cref="CommandHandler"/>.
@@ -112,6 +113,44 @@
       {
         throw new InvalidOperationException($"The command '{name}' does not exist.");
       }
+    }
+
+    /// <summary>
+    /// Executes a registered command by its name.
+    /// </summary>
+    /// <param name="name">
+    /// The users input
+    /// </param>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if the specified command does not exist in the <see cref="CommandHandler"/>
+    /// </exception>
+    public void Execute(string userInput)
+    {
+      if (!userInput.StartsWith(commandPrefix)) return;
+    
+      string[] args = userInput.Split(" ");
+      string commandName = args[0].Substring(commandPrefix.Length);
+      args = args.Skip(1).ToArray();
+
+      if (commandList.TryGetValue(commandName, out Action<string, string[]>? action))
+      {
+        action.Invoke(commandName, args);
+      }
+      else
+      {
+        throw new InvalidOperationException($"The command '{commandName}' does not exist.");
+      }
+    }
+
+    /// <summary>
+    /// Set the prefix used to execute the commands in this registry
+    /// </summary>
+    /// <param name="commandPrefix">
+    /// The prefix you want to use to execute the command in this registry
+    /// </param>
+    public void SetCommandPrefix(string commandPrefix)
+    {
+      this.commandPrefix = commandPrefix;
     }
   }
 }
