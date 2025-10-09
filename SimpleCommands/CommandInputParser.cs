@@ -2,16 +2,16 @@
 
 internal class CommandInputParser
 {
-  public string commandPrefix { get; private set; }
+  public string CommandPrefix { get; private set; }
 
   public CommandInputParser(string commandPrefix = "/")
   {
-    this.commandPrefix = commandPrefix;
+    CommandPrefix = commandPrefix;
   }
 
   public void SetPrefix(string commandPrefix)
   {
-    this.commandPrefix = commandPrefix;
+    CommandPrefix = commandPrefix;
   }
 
   public bool TryParseUserInput(string userInput, out string commandName, out string[] commandArgs)
@@ -19,11 +19,11 @@ internal class CommandInputParser
     commandName = string.Empty;
     commandArgs = Array.Empty<string>();
 
-    if (string.IsNullOrWhiteSpace(userInput) || !userInput.StartsWith(commandPrefix))
+    if (string.IsNullOrWhiteSpace(userInput) || !userInput.StartsWith(CommandPrefix))
       return false;
 
     string[] parts = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-    commandName = parts[0].Substring(commandPrefix.Length).ToLowerInvariant();
+    commandName = parts[0].Substring(CommandPrefix.Length).ToLowerInvariant();
     commandArgs = parts.Skip(1).ToArray();
     return true;
   }

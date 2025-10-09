@@ -4,21 +4,21 @@ namespace SimpleCommands
 {
   public abstract class Command
   {
-    public string[] Names { get; }
+    public string[] CommandNames { get; private set; }
 
     protected Command()
     {
-      var attribute = GetType().GetCustomAttribute<CommandNameAttribute>();
+      var commandNameAttribute = GetType().GetCustomAttribute<CommandNameAttribute>();
 
-      if (attribute == null)
+      if (commandNameAttribute == null)
       {
         throw new InvalidOperationException(
             $"Class '{GetType().FullName}' must have a [CommandName] attribute.");
       }
 
-      Names = attribute.Names;
+      CommandNames = commandNameAttribute.CommandNames;
     }
 
-    public abstract void Execute(string CommandName, string[] args);
+    public abstract void Execute(string commandName, string[] commandArgs);
   }
 }

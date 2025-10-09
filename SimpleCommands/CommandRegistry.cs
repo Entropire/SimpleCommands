@@ -19,7 +19,7 @@ public class CommandRegistry
 
   public void RegisterCommand(Command command)
   {
-    foreach (string commandName in command.Names)
+    foreach (string commandName in command.CommandNames)
     {
       RegisterCommand(commandName, command.Execute);
     }
@@ -39,7 +39,5 @@ public class CommandRegistry
   }
 
   public bool TryGetCommand(string commandName, out Action<string, string[]>? commandAction)
-  {
-    return dictionaryOfCommands.TryGetValue(commandName.ToLowerInvariant(), out commandAction);
-  }
+      => dictionaryOfCommands.TryGetValue(commandName.ToLowerInvariant(), out commandAction);
 }

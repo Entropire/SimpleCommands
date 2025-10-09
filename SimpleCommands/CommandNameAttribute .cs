@@ -3,11 +3,11 @@
   [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
   public class CommandNameAttribute : Attribute
   {
-    public string[] Names { get; }
+    public string[] CommandNames { get; private set; }
 
-    public CommandNameAttribute(string[] names)
+    public CommandNameAttribute(params string[] commandNames)
     {
-      Names = names;
+      CommandNames = commandNames;
     }
   }
 }
