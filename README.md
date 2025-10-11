@@ -6,45 +6,65 @@
   </ul> 
 </div> 
 
---- 
+---
 ## Description 
-`SimpleCommands` provides a lightweight framework to create, register, and execute commands dynamically in C#. Commands can be registered either as **lambda functions** or as **dedicated classes** inheriting from `Command` with a unique `[CommandName]` attribute.
+`SimpleCommands` is a lightweight C# framework for creating, registering, and executing commands dynamically. It is ideal for quickly building CLI tools, prototypes, or any application that requires command-based input.
+
+The framework supports defining commands either via class inheritance or lambda expressions, giving you flexibility in how you structure your commands. Additionally, it provides an easy way to switch between command handlers, allowing you to change the active set of commands dynamically.
+
+## Features
+- Safe registration and unregistration of commands
+- Flexible command parsing with customizable prefixes
+- Support for commands via class inheritance or lambda expressions 
+- Case-insensitive command lookup
+- Easy to use command execution system execute commands directly by name or parse user input automatically.
 
 ## Usage
-### 1. Create a CommandHandler
-```csharp
-CommandHandler handler = new CommandHandler();
+### 1. Instantiate a new CommandHandler
+```cs
+CommandHandler handler = new CommandHandler("/"); 
 ```
 
-### 2.1. Registering a Command with a Lambda
+### 2. Register Commands
+Commands can be registered in two ways:
 
-```csharp
-handler.Register("greet", args =>
+#### a) Use a inline action
+```cs
+handler.RegisterCommand((name, args) =>
 {
-    Console.WriteLine($"Hello, {args[0]}!");
-});
+    Console.WriteLine($"Executed command '{name}' with arguments: {string.Join(", ", args)}");
+}, "echo", "say");
 ```
 
-### 2.2. Registering a Command with a Command Class
-```csharp
-[CommandName("greet")]
-class GoodbyeCommand : Command
+#### b) Use a command class
+```cs
+[CommandName("greet", "hello")]
+public class GreetCommand : Command
 {
-    public override void Execute(string[] args)
+    public override void Execute(string commandName, string[] commandArgs)
     {
-        Console.WriteLine($"Hello, {args[0]}!");
+        Console.WriteLine($"Hello, {string.Join(' ', commandArgs)}!");
     }
 }
+
+// Register it
+handler.RegisterCommand(new GreetCommand());
 ```
 
-### 3. Unregistering a Command
-```csharp
-handler.Unregister("greet");
+### 3. Executing commands
+You can execute commands manually by name and arguments:
+```cs
+handler.Execute("echo", new[] { "Hello", "World" });
+```
+Or automatically by parsing user input:
+```cs
+string userInput = console.readline() ?? "";
+handler.Execute(userInput);
 ```
 
-### 3. Execute a Command
-```csharp
-handler.Execute("greet");
+### Removing a command
+```cs
+handler.UnregisterCommand("echo");
 ```
 
 ## Getting Started
@@ -76,3 +96,4 @@ Follow these steps to use `SimpleCommands` in your project.
 > IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 > FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 > AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+
