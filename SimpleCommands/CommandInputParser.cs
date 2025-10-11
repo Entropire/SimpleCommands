@@ -23,7 +23,7 @@ internal class CommandInputParser
       return false;
 
     string[] parts = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-    commandName = parts[0].Substring(CommandPrefix.Length).ToLowerInvariant();
+    commandName = parts[0].Substring(CommandPrefix.Length);
     commandArgs = parts.Skip(1).ToArray();
     return true;
   }

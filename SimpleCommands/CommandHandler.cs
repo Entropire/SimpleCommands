@@ -11,8 +11,8 @@ public class CommandHandler
     _commandInputParser = new CommandInputParser(commandPrefix);
   }
 
-  public void RegisterCommand(string commandName, Action<string, string[]> commandAction) 
-    => _commandRegistry.RegisterCommand(commandName, commandAction);
+  public void RegisterCommand(Action<string, string[]> commandAction, params string[] commandNames) 
+    => _commandRegistry.RegisterCommand(commandAction, commandNames);
 
   public void RegisterCommand(Command command) => _commandRegistry.RegisterCommand(command);
 
@@ -20,7 +20,7 @@ public class CommandHandler
 
   public void Execute(string name, string[] args)
   {
-    if (!_commandRegistry.TryGetCommand(name, out Action<string, string[]> commandAction))
+        if (!_commandRegistry.TryGetCommand(name, out Action<string, string[]> commandAction))
     {
       return;
     }

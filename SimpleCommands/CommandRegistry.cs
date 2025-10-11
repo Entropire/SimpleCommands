@@ -2,32 +2,30 @@
 
 public class CommandRegistry
 {
-  private Dictionary<string, Action<string, string[]>> dictionaryOfCommands = new();
+    private Dictionary<string, Action<string, string[]>> dictionaryOfCommands = new(StringComparer.OrdinalIgnoreCase);
 
-  public void RegisterCommand(string commandName, Action<string, string[]> commandAction)
+  public void RegisterCommand(Action<string, string[]> commandAction, params string[] commandNames)
   {
-    commandName = commandName.ToLowerInvariant();
-    if (!dictionaryOfCommands.ContainsKey(commandName))
-    {
-      dictionaryOfCommands.Add(commandName, commandAction);
-    }
-    else
-    {
-      throw new InvalidOperationException($"Command '{commandName}' already exists.");
-    }
+        foreach (string commandName in commandNames)
+        {
+            if (!dictionaryOfCommands.ContainsKey(commandName))
+            {
+                dictionaryOfCommands.Add(commandName, commandAction);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Command '{commandName}' already exists.");
+            }
+        }
   }
 
   public void RegisterCommand(Command command)
   {
-    foreach (string commandName in command.CommandNames)
-    {
-      RegisterCommand(commandName, command.Execute);
-    }
+    RegisterCommand(command.Execute, command.CommandNames);
   }
 
   public void UnregisterCommand(string commandName)
   {
-    commandName = commandName.ToLowerInvariant();
     if (dictionaryOfCommands.ContainsKey(commandName))
     {
       dictionaryOfCommands.Remove(commandName);
@@ -39,5 +37,5 @@ public class CommandRegistry
   }
 
   public bool TryGetCommand(string commandName, out Action<string, string[]>? commandAction)
-      => dictionaryOfCommands.TryGetValue(commandName.ToLowerInvariant(), out commandAction);
+      => dictionaryOfCommands.TryGetValue(commandName, out commandAction);
 }
