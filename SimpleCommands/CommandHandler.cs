@@ -20,12 +20,12 @@ public class CommandHandler
 
   public void Execute(string name, string[] args)
   {
-        if (!_commandRegistry.TryGetCommand(name, out Action<string, string[]> commandAction))
+     if (!_commandRegistry.TryGetCommand(name, out Action<string, string[]>? commandAction))
     {
-      return;
+      return;   
     }
 
-    commandAction.Invoke(name, args);
+    commandAction?.Invoke(name, args);
   }
 
   public void Execute(string userInput)

@@ -14,7 +14,7 @@ namespace Test
       string input;
       while (true)
       {
-        input = Console.ReadLine();
+        input = Console.ReadLine() ?? "";
         cmdh.Execute(input);
         cmdh2.Execute(input);
       }
